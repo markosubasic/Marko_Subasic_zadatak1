@@ -1,17 +1,33 @@
 from fastapi import FastAPI
-from tickethub.routers.tickets import router as tickets_router
+from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi.errors import RateLimitExceeded
 
-app = FastAPI(title="TicketHub", version="0.1.0")
+from tickethub.core.config import get_settings
+from tickethub.core.logging import configure_logging
+from tickethub.routers import tickets, auth, stats
 
-app.include_router(tickets_router)
+configure_logging()
+
+settings = get_settings()
+limiter = Limiter(key_func=lambda request: request.client.host, default_limits=[settings.rate_limit])
+
+app = FastAPI(title="TicketHub", version="0.2.0")
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+
+app.include_router(auth.router)
+app.include_router(tickets.router)
+app.include_router(stats.router)
 
 @app.get("/", include_in_schema=False)
 async def index():
     return {
-        "message": "Welcome to TicketHub API",
+        "message": "TicketHub API",
         "docs": "/docs",
-        "tickets": "/tickets"
+        "tickets": "/tickets",
+        "health": "/healthz",
     }
+
 @app.get("/healthz", tags=["infra"])
-async def health() -> dict[str, str]:
+async def health():
     return {"status": "ok"}

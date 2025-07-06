@@ -1,5 +1,5 @@
+from pydantic import BaseModel
 from enum import Enum
-from pydantic import BaseModel, Field
 
 
 class Status(str, Enum):
@@ -15,8 +15,9 @@ class Priority(str, Enum):
 
 class Ticket(BaseModel):
     id: int
-    title: str = Field(..., alias="todo")
+    title: str
     status: Status
     priority: Priority
     assignee: str
-    raw: dict  # puni JSON iz izvora
+    description: str           
+    raw: dict
