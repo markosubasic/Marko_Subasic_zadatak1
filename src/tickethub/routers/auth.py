@@ -5,6 +5,8 @@ import jwt
 from fastapi import APIRouter, HTTPException, Depends, status
 from fastapi.security import OAuth2PasswordRequestForm
 
+from tickethub.core.config import get_settings 
+
 settings = get_settings()
 router = APIRouter(prefix="/auth", tags=["auth"])
 
