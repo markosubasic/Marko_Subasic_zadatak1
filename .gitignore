@@ -1,0 +1,8 @@
+# Python standard
+__pycache__/
+.env
+.venv/
+*.pyc
+*.pyo
+# test artefakti
+.pytest_cache/
