@@ -1,4 +1,6 @@
-import json, asyncio
+import json
+import asyncio
+
 from tickethub.core.config import get_settings
 
 try:

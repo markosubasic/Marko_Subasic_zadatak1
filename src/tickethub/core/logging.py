@@ -1,4 +1,7 @@
-import logging, structlog, sys
+import logging
+import structlog
+import sys
+
 from tickethub.core.config import get_settings
 
 def configure_logging() -> None:
